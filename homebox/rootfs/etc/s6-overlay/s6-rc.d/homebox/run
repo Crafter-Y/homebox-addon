@@ -15,14 +15,14 @@ export TMPDIR="/data/tmp"
 # inside the addon's persistent data directory.
 cd /data
 
-# Remove stale SQLite WAL/SHM lock files that can be left behind after a crash.
-# Homebox cleans these up on a clean shutdown; only crashes leave them behind.
-mkdir -p /data/.data
-rm -f /data/.data/*.db-shm /data/.data/*.db-wal
+# Use Homebox's official SQLite configuration variable and keep DB under
+# persistent /data. Keep WAL mode enabled for SQLite durability.
+export HBOX_DATABASE_SQLITE_PATH="/data/homebox.db?_pragma=busy_timeout=30000&_pragma=journal_mode=WAL&_fk=1&_time_format=sqlite"
 
-# Override SQLite path: use DELETE journal mode instead of WAL to avoid shared
-# memory issues on HA OS Docker volumes, and raise busy_timeout to 30 seconds.
-export HBOX_STORAGE_SQLITE_PATH="/data/.data/homebox.db?_pragma=busy_timeout=30000&_pragma=journal_mode=DELETE&_fk=1&_time_format=sqlite"
+# Show the effective SQLite database file path in startup logs.
+HBOX_DATABASE_SQLITE_FILE="${HBOX_DATABASE_SQLITE_PATH%%\?*}"
+mkdir -p "$(dirname "${HBOX_DATABASE_SQLITE_FILE}")"
+bashio::log.info "Using SQLite database at ${HBOX_DATABASE_SQLITE_FILE}"
 
 # Run in production mode (disables developer tooling/debug endpoints).
 export HBOX_MODE="production"

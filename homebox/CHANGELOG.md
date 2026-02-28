@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.23.3
+
+- Fixed data loss risk on restart by removing startup cleanup that deleted SQLite `.db-wal` files
+- Switched to Homebox official database variable `HBOX_DATABASE_SQLITE_PATH`
+- Added startup log line that prints the active SQLite database file path
+- Database path is `/data/homebox.db`
+
 ## 0.23.1
 
 - Initial release based on Homebox v0.23.1

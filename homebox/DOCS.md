@@ -38,7 +38,7 @@ Default: `10`
 
 All Homebox data (SQLite database, uploaded images and attachments) is stored in the add-on's persistent `/data` directory. This directory is included in Home Assistant backups automatically.
 
-The database file is located at `/data/homebox/homebox.db`.
+The database file is located at `/data/homebox.db`.
 
 ## Port
 

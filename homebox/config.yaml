@@ -1,6 +1,6 @@
 ---
 name: Homebox
-version: "0.23.2"
+version: "0.23.3"
 slug: homebox
 description: Inventory management — track and manage your belongings
 url: https://github.com/Crafter-Y/homebox-addon
@@ -24,5 +24,5 @@ schema:
   allow_registration: bool
   max_upload_size: int(1,100)
 backup_exclude:
-  - data/.data/*.db-shm
-  - data/.data/*.db-wal
+  - .data/*.db-shm
+  - .data/*.db-wal

@@ -1,0 +1,5 @@
+# Claude Code local settings
+.claude/
+
+# Playwright MCP browser logs (dev tooling)
+.playwright-mcp/

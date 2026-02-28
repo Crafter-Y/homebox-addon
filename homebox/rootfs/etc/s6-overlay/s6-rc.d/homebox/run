@@ -22,7 +22,7 @@ rm -f /data/.data/*.db-shm /data/.data/*.db-wal
 
 # Override SQLite path: use DELETE journal mode instead of WAL to avoid shared
 # memory issues on HA OS Docker volumes, and raise busy_timeout to 30 seconds.
-export HBOX_STORAGE_SQLITE_PATH="/data/.data/homebox.db?_pragma=busy_timeout=5000&_pragma=journal_mode=DELETE&_fk=1&_time_format=sqlite"
+export HBOX_STORAGE_SQLITE_PATH="/data/.data/homebox.db?_pragma=busy_timeout=30000&_pragma=journal_mode=DELETE&_fk=1&_time_format=sqlite"
 
 # Run in production mode (disables developer tooling/debug endpoints).
 export HBOX_MODE="production"

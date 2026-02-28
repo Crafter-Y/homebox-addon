@@ -1,0 +1,28 @@
+---
+name: Homebox
+version: "0.23.1"
+slug: homebox
+description: Inventory management — track and manage your belongings
+url: https://github.com/Crafter-Y/homebox-addon
+init: false
+arch:
+  - aarch64
+  - amd64
+startup: application
+boot: manual
+ports:
+  7745/tcp: 7745
+ports_description:
+  7745/tcp: Web UI
+webui: "http://[HOST]:[PORT:7745]"
+options:
+  log_level: info
+  allow_registration: true
+  max_upload_size: 10
+schema:
+  log_level: list(trace|debug|info|warn|error|fatal|panic)
+  allow_registration: bool
+  max_upload_size: int(1,100)
+backup_exclude:
+  - data/*.db-shm
+  - data/*.db-wal

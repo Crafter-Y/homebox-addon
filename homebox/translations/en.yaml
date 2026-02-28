@@ -1,0 +1,17 @@
+---
+configuration:
+  log_level:
+    name: Log level
+    description: >-
+      The level of log detail. "info" is suitable for normal use.
+      Use "debug" or "trace" for troubleshooting.
+  allow_registration:
+    name: Allow registration
+    description: >-
+      Allow new users to self-register an account. Disable this after
+      creating your initial account to prevent unauthorized access.
+  max_upload_size:
+    name: Max upload size (MB)
+    description: >-
+      Maximum size in megabytes for file uploads (e.g., item photos,
+      attachments). Default is 10 MB.

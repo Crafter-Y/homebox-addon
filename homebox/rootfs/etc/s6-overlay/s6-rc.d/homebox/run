@@ -1,0 +1,36 @@
+#!/command/with-contenv bashio
+# shellcheck shell=bash
+# ==============================================================================
+# Home Assistant Add-on: Homebox
+# Long-running service: starts the Homebox binary with the correct environment.
+# ==============================================================================
+
+# Fix: Homebox tries to create temp files under $TMPDIR.
+# /tmp is not writable in HA addon containers, so we redirect to /data/tmp.
+mkdir -p /data/tmp
+chmod 1777 /data/tmp
+export TMPDIR="/data/tmp"
+
+# Store all persistent data in the HA addon data directory (/data).
+export HBOX_STORAGE_CONN_STRING="file:///data/"
+export HBOX_STORAGE_PREFIX_PATH="homebox"
+
+# Run in production mode (disables developer tooling/debug endpoints).
+export HBOX_MODE="production"
+
+# Apply user-configurable options from the HA add-on UI.
+export HBOX_LOG_LEVEL="$(bashio::config 'log_level')"
+export HBOX_LOG_FORMAT="text"
+export HBOX_WEB_MAX_UPLOAD_SIZE="$(bashio::config 'max_upload_size')"
+export HBOX_OPTIONS_ALLOW_REGISTRATION="$(bashio::config 'allow_registration')"
+
+# Disable telemetry and self-update checks (not useful in a local HA context).
+export HBOX_OPTIONS_ALLOW_ANALYTICS="false"
+export HBOX_OPTIONS_GITHUB_RELEASE_CHECK="false"
+
+# Trust reverse-proxy headers if HA is fronted by a proxy, but keep false
+# for the default direct-access scenario.
+export HBOX_OPTIONS_TRUST_PROXY="false"
+
+bashio::log.info "Starting Homebox..."
+exec /usr/bin/homebox

@@ -24,3 +24,15 @@ Inventory management system — track and manage your belongings inside Home Ass
 [aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
 [amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
 [license-shield]: https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg
+
+## License
+
+CC BY 4.0
+
+homebox-addon (c) by Crafter-Y
+
+homebox-addon is licensed under a
+Creative Commons Attribution 4.0 International License.
+
+You should have received a copy of the license along with this
+work. If not, see <https://creativecommons.org/licenses/by/4.0/>.

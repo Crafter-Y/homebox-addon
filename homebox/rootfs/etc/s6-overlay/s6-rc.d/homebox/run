@@ -11,9 +11,9 @@ mkdir -p /data/tmp
 chmod 1777 /data/tmp
 export TMPDIR="/data/tmp"
 
-# Store all persistent data in the HA addon data directory (/data).
-export HBOX_STORAGE_CONN_STRING="file:///data/"
-export HBOX_STORAGE_PREFIX_PATH="homebox"
+# Change to /data so Homebox resolves all relative storage paths
+# inside the addon's persistent data directory.
+cd /data
 
 # Run in production mode (disables developer tooling/debug endpoints).
 export HBOX_MODE="production"

@@ -15,6 +15,10 @@ export TMPDIR="/data/tmp"
 # inside the addon's persistent data directory.
 cd /data
 
+# Remove stale SQLite WAL/SHM lock files that can be left behind after a crash.
+# Homebox cleans these up on a clean shutdown; only crashes leave them behind.
+rm -f /data/.data/*.db-shm /data/.data/*.db-wal
+
 # Run in production mode (disables developer tooling/debug endpoints).
 export HBOX_MODE="production"
 

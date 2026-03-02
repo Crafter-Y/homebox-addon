@@ -1,0 +1,78 @@
+name: Bump addon version
+
+on:
+  push:
+    branches:
+      - 'renovate/**'
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch master for comparison
+        run: git fetch origin master
+
+      - name: Bump version and update changelog
+        run: |
+          set -euo pipefail
+
+          # Versions on the Renovate branch (deps already updated by Renovate)
+          HB_VERSION=$(grep -oP 'sysadminsmedia/homebox:\K[^\s]+' homebox/Dockerfile)
+          BASE_VERSION=$(grep -oP 'hassio-addons/base:\K[^\s]+' homebox/build.yaml | head -1)
+          DC_VERSION=$(grep -oP 'home-assistant/devcontainer:\K[^"]+' .devcontainer.json)
+          ADDON_VERSION=$(grep -oP '^version: "\K[^"]+' homebox/config.yaml)
+
+          # Versions on master (before Renovate's changes)
+          MASTER_HB=$(git show origin/master:homebox/Dockerfile | grep -oP 'sysadminsmedia/homebox:\K[^\s]+')
+          MASTER_BASE=$(git show origin/master:homebox/build.yaml | grep -oP 'hassio-addons/base:\K[^\s]+' | head -1)
+          MASTER_DC=$(git show origin/master:.devcontainer.json | grep -oP 'home-assistant/devcontainer:\K[^"]+')
+
+          # Determine new addon version
+          if [ "$MASTER_HB" != "$HB_VERSION" ]; then
+            # Homebox updated: match addon version to new Homebox version
+            NEW_VERSION="$HB_VERSION"
+          else
+            # Only infrastructure deps updated: increment patch
+            MAJOR=$(echo "$ADDON_VERSION" | cut -d. -f1)
+            MINOR=$(echo "$ADDON_VERSION" | cut -d. -f2)
+            PATCH=$(echo "$ADDON_VERSION" | cut -d. -f3)
+            NEW_VERSION="${MAJOR}.${MINOR}.$((PATCH + 1))"
+          fi
+
+          # Build changelog lines
+          CHANGES=""
+          [ "$MASTER_HB" != "$HB_VERSION" ] && CHANGES+="- Updated Homebox from ${MASTER_HB} to ${HB_VERSION}"$'\n'
+          [ "$MASTER_BASE" != "$BASE_VERSION" ] && CHANGES+="- Updated HA base image from ${MASTER_BASE} to ${BASE_VERSION}"$'\n'
+          [ "$MASTER_DC" != "$DC_VERSION" ] && CHANGES+="- Updated devcontainer from ${MASTER_DC} to ${DC_VERSION}"$'\n'
+          [ -z "$CHANGES" ] && CHANGES="- Dependency updates"$'\n'
+
+          # Update config.yaml version
+          sed -i "s|^version: \".*\"|version: \"${NEW_VERSION}\"|" homebox/config.yaml
+
+          # Prepend new changelog entry after the "# Changelog" header
+          {
+            echo "# Changelog"
+            echo ""
+            echo "## ${NEW_VERSION}"
+            echo ""
+            printf "%s" "$CHANGES"
+            echo ""
+            tail -n +2 homebox/CHANGELOG.md
+          } > /tmp/CHANGELOG.md
+          mv /tmp/CHANGELOG.md homebox/CHANGELOG.md
+
+          # Commit and push if there are changes
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add homebox/config.yaml homebox/CHANGELOG.md
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: bump addon version to ${NEW_VERSION}"
+            git push
+          fi

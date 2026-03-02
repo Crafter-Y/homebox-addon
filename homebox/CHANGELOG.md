@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.23.4
+
+- Dependency updates
+
+
 ## 0.23.3
 
 - Fixed data loss risk on restart by removing startup cleanup that deleted SQLite `.db-wal` files

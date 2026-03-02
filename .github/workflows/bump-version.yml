@@ -32,16 +32,16 @@ jobs:
           MASTER_BASE=$(git show origin/master:homebox/build.yaml | grep -oP 'hassio-addons/base:\K[^\s]+' | head -1)
           MASTER_DC=$(git show origin/master:.devcontainer.json | grep -oP 'home-assistant/devcontainer:\K[^"]+')
 
-          # Determine new addon version
+          # Determine new addon version (scheme: <homebox_version>.<addon_patch>)
           if [ "$MASTER_HB" != "$HB_VERSION" ]; then
-            # Homebox updated: match addon version to new Homebox version
-            NEW_VERSION="$HB_VERSION"
+            # Homebox updated: reset addon patch to 0
+            NEW_VERSION="${HB_VERSION}.0"
           else
-            # Only infrastructure deps updated: increment patch
-            MAJOR=$(echo "$ADDON_VERSION" | cut -d. -f1)
-            MINOR=$(echo "$ADDON_VERSION" | cut -d. -f2)
-            PATCH=$(echo "$ADDON_VERSION" | cut -d. -f3)
-            NEW_VERSION="${MAJOR}.${MINOR}.$((PATCH + 1))"
+            # Only infrastructure deps updated: increment addon patch
+            ADDON_PATCH=$(echo "$ADDON_VERSION" | cut -d. -f4)
+            ADDON_PATCH=${ADDON_PATCH:-0}
+            HB_BASE=$(echo "$ADDON_VERSION" | cut -d. -f1-3)
+            NEW_VERSION="${HB_BASE}.$((ADDON_PATCH + 1))"
           fi
 
           # Build changelog lines

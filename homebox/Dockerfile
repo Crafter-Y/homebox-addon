@@ -2,7 +2,7 @@
 ARG BUILD_FROM
 
 # Stage 1: Extract the Homebox binary from the official multi-arch image
-FROM ghcr.io/sysadminsmedia/homebox:0.23.1 AS homebox-src
+FROM ghcr.io/sysadminsmedia/homebox:0.24.0 AS homebox-src
 
 # Stage 2: Build the HA addon on top of the official HA base image
 FROM ${BUILD_FROM}

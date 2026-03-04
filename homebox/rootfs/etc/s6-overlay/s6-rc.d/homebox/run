@@ -41,5 +41,18 @@ export HBOX_OPTIONS_GITHUB_RELEASE_CHECK="false"
 # for the default direct-access scenario.
 export HBOX_OPTIONS_TRUST_PROXY="false"
 
+if bashio::config.true 'ha_api_startup_check'; then
+	if [ -n "${SUPERVISOR_TOKEN:-}" ]; then
+		HA_API_STATUS="$(curl -sS -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${SUPERVISOR_TOKEN}" "http://supervisor/core/api/" || true)"
+		if [ "${HA_API_STATUS}" = "200" ]; then
+			bashio::log.info "Home Assistant API startup check succeeded"
+		else
+			bashio::log.warning "Home Assistant API startup check returned HTTP ${HA_API_STATUS}"
+		fi
+	else
+		bashio::log.warning "SUPERVISOR_TOKEN not available; skipping Home Assistant API startup check"
+	fi
+fi
+
 bashio::log.info "Starting Homebox..."
 exec /usr/bin/homebox

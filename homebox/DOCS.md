@@ -34,6 +34,12 @@ The maximum size (in MB) for file uploads such as item photos and attachments.
 
 Default: `10`
 
+### Option: `ha_api_startup_check`
+
+When `true`, the add-on performs a startup connectivity check to the Home Assistant Core API using the Supervisor token and logs the result.
+
+Default: `true`
+
 ## Data Storage
 
 All Homebox data (SQLite database, uploaded images and attachments) is stored in the add-on's persistent `/data` directory. This directory is included in Home Assistant backups automatically.

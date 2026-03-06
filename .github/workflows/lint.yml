@@ -1,0 +1,90 @@
+---
+name: Lint
+
+'on':
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Install linters
+        run: |
+          python -m pip install --upgrade pip
+          pip install yamllint
+          sudo apt-get update
+          sudo apt-get install --yes shellcheck
+
+      - name: Run yamllint
+        run: |
+          mapfile -d '' yaml_files < <(
+            find . -path ./.git -prune -o -type f \
+              \( -name '*.yaml' -o -name '*.yml' \) -print0
+          )
+          if [ "${#yaml_files[@]}" -eq 0 ]; then
+            echo "No YAML files found"
+            exit 0
+          fi
+
+          yamllint "${yaml_files[@]}"
+
+      - name: Run shellcheck
+        run: |
+          shell_files=()
+
+          while IFS= read -r -d '' file; do
+            header="$(head -n 10 "$file" 2>/dev/null || true)"
+
+            case "$file" in
+              *.sh)
+                shell_files+=("$file")
+                continue
+                ;;
+            esac
+
+            if printf '%s\n' "$header" | grep -Eq \
+              '^#[[:space:]]*shellcheck[[:space:]]+shell='; then
+              shell_files+=("$file")
+              continue
+            fi
+
+            if printf '%s\n' "$header" | grep -Eq \
+              '^#!.*/(ash|bash|dash|ksh|sh|zsh)([[:space:]]|$)|^#!.*[[:space:]](ash|bash|dash|ksh|sh|zsh)([[:space:]]|$)'; then
+              shell_files+=("$file")
+            fi
+          done < <(
+            find . -path ./.git -prune -o -type f \
+              \( -name '*.sh' -o -name 'run' -o -perm /111 \) -print0
+          )
+
+          if [ "${#shell_files[@]}" -eq 0 ]; then
+            echo "No shell files found"
+            exit 0
+          fi
+
+          shellcheck "${shell_files[@]}"
+
+      - name: Run hadolint
+        run: |
+          mapfile -d '' dockerfiles < <(
+            find . -path ./.git -prune -o -type f -name 'Dockerfile*' -print0
+          )
+          if [ "${#dockerfiles[@]}" -eq 0 ]; then
+            echo "No Dockerfiles found"
+            exit 0
+          fi
+
+          for dockerfile in "${dockerfiles[@]}"; do
+            echo "Linting ${dockerfile}"
+            docker run --rm -i ghcr.io/hadolint/hadolint < "${dockerfile}"
+          done

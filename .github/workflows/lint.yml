@@ -27,16 +27,51 @@ jobs:
 
       - name: Run yamllint
         run: |
-          yamllint \
-            homebox/config.yaml \
-            homebox/build.yaml \
-            repository.yaml \
-            homebox/translations/en.yaml
+          mapfile -d '' yaml_files < <(
+            find . -path ./.git -prune -o -type f \
+              \( -name '*.yaml' -o -name '*.yml' \) -print0
+          )
+          if [ "${#yaml_files[@]}" -eq 0 ]; then
+            echo "No YAML files found"
+            exit 0
+          fi
+
+          yamllint "${yaml_files[@]}"
 
       - name: Run shellcheck
-        run: shellcheck homebox/rootfs/etc/s6-overlay/s6-rc.d/homebox/run
+        run: |
+          shell_files=()
+
+          while IFS= read -r -d '' file; do
+            if [[ "$file" == *.sh ]] || grep -Eq '^# shellcheck shell=' "$file"; then
+              shell_files+=("$file")
+              continue
+            fi
+
+            first_line="$(head -n 1 "$file" 2>/dev/null || true)"
+            if printf '%s\n' "$first_line" | grep -Eq '^#!.*\b(a|ba|da|k|z)?sh\b'; then
+              shell_files+=("$file")
+            fi
+          done < <(find . -path ./.git -prune -o -type f -print0)
+
+          if [ "${#shell_files[@]}" -eq 0 ]; then
+            echo "No shell files found"
+            exit 0
+          fi
+
+          shellcheck "${shell_files[@]}"
 
       - name: Run hadolint
-        uses: hadolint/hadolint-action@v3.1.0
-        with:
-          dockerfile: homebox/Dockerfile
+        run: |
+          mapfile -d '' dockerfiles < <(
+            find . -path ./.git -prune -o -type f -name 'Dockerfile*' -print0
+          )
+          if [ "${#dockerfiles[@]}" -eq 0 ]; then
+            echo "No Dockerfiles found"
+            exit 0
+          fi
+
+          for dockerfile in "${dockerfiles[@]}"; do
+            echo "Linting ${dockerfile}"
+            docker run --rm -i ghcr.io/hadolint/hadolint < "${dockerfile}"
+          done

@@ -19,6 +19,7 @@ jobs:
         with:
           args: |
             --test \
-            --all \
+            --amd64 \
+            --aarch64 \
             --target /data/homebox \
             --addon

@@ -87,6 +87,7 @@ jobs:
         uses: home-assistant/builder@2026.02.1
         with:
           args: |
-            --all \
+            --amd64 \
+            --aarch64 \
             --target /data/homebox \
             --addon

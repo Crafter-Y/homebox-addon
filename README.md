@@ -25,6 +25,10 @@ Inventory management system — track and manage your belongings inside Home Ass
 [amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
 [license-shield]: https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg
 
+## Contributing
+
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
 ## License
 
 CC BY 4.0

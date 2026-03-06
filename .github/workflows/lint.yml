@@ -1,0 +1,42 @@
+---
+name: Lint
+
+'on':
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Install linters
+        run: |
+          python -m pip install --upgrade pip
+          pip install yamllint
+          sudo apt-get update
+          sudo apt-get install --yes shellcheck
+
+      - name: Run yamllint
+        run: |
+          yamllint \
+            homebox/config.yaml \
+            homebox/build.yaml \
+            repository.yaml \
+            homebox/translations/en.yaml
+
+      - name: Run shellcheck
+        run: shellcheck homebox/rootfs/etc/s6-overlay/s6-rc.d/homebox/run
+
+      - name: Run hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: homebox/Dockerfile

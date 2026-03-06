@@ -2,8 +2,7 @@
 
 ## 0.24.0.1
 
-- Publish pre-built GHCR images for amd64 and aarch64 installs.
-- Add GitHub Actions workflows to validate PR image builds and publish releases from `master`.
+- Use pre-built GHCR images for amd64 and aarch64 installs.
 
 ## 0.24.0.0
 

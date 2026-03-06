@@ -1,6 +1,6 @@
 ---
 name: Homebox
-version: "0.24.0.0"
+version: "0.24.0.1"
 slug: homebox
 description: Inventory management — track and manage your belongings
 url: https://github.com/Crafter-Y/homebox-addon
@@ -8,6 +8,7 @@ init: false
 arch:
   - aarch64
   - amd64
+image: ghcr.io/crafter-y/{arch}-homebox
 startup: application
 boot: manual
 ports:

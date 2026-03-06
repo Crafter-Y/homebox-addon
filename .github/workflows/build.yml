@@ -1,0 +1,25 @@
+---
+name: Build
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Test build Homebox app
+        uses: home-assistant/builder@2026.02.1
+        with:
+          args: |
+            --test \
+            --amd64 \
+            --aarch64 \
+            --target /data/homebox \
+            --addon

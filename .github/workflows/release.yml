@@ -1,0 +1,93 @@
+---
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - homebox/config.yaml
+      - homebox/CHANGELOG.md
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Gather release metadata
+        id: release
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+
+          VERSION="$(grep -oP '^version: "\K[^"]+' homebox/config.yaml)"
+          TAG="v${VERSION}"
+
+          if git ls-remote --exit-code --tags origin "${TAG}" >/dev/null 2>&1; then
+            echo "Tag ${TAG} already exists; skipping release."
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          changed_files="$(
+            git diff --name-only "${BEFORE_SHA}" "${GITHUB_SHA}" -- \
+              homebox/config.yaml \
+              homebox/CHANGELOG.md
+          )"
+          if [ -z "${changed_files}" ]; then
+            echo "No release-related changes detected; skipping release."
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          awk -v version="${VERSION}" '
+            $0 == "## " version { found=1; next }
+            found && /^## / { exit }
+            found { print }
+          ' homebox/CHANGELOG.md > /tmp/release-notes.md
+
+          if [ ! -s /tmp/release-notes.md ]; then
+            echo "Release ${VERSION}" > /tmp/release-notes.md
+          fi
+
+          {
+            echo "should_release=true"
+            echo "version=${VERSION}"
+            echo "tag=${TAG}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GitHub Container Registry
+        if: steps.release.outputs.should_release == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Create tag and GitHub release
+        if: steps.release.outputs.should_release == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.release.outputs.tag }}" \
+            --target "${GITHUB_SHA}" \
+            --title "${{ steps.release.outputs.tag }}" \
+            --notes-file /tmp/release-notes.md
+
+      - name: Publish Homebox app images
+        if: steps.release.outputs.should_release == 'true'
+        uses: home-assistant/builder@2026.02.1
+        with:
+          args: |
+            --amd64 \
+            --aarch64 \
+            --target /data/homebox \
+            --addon

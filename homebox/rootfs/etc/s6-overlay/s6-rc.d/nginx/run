@@ -23,27 +23,34 @@ s6-setuidgid nginx mkdir -p \
 
 # Override Alpine nginx defaults that write under /var/lib/nginx and
 # /var/log/nginx, which are not writable on all Home Assistant installs.
-if ! grep -q '^error_log /var/log/nginx/error.log warn;$' /etc/nginx/nginx.conf; then
-    bashio::log.error "Unexpected nginx error_log directive in nginx.conf"
-    exit 1
+if ! grep -Eq '^error_log[[:space:]]+stderr[[:space:]]+warn;$' /etc/nginx/nginx.conf; then
+    if ! grep -Eq '^error_log[[:space:]]+/var/log/nginx/error.log[[:space:]]+warn;$' /etc/nginx/nginx.conf; then
+        bashio::log.error "Unexpected nginx error_log directive in nginx.conf"
+        exit 1
+    fi
+
+    sed -i -E \
+        -e 's#^error_log[[:space:]]+/var/log/nginx/error.log[[:space:]]+warn;#error_log stderr warn;#' \
+        /etc/nginx/nginx.conf
 fi
 
-if ! grep -q '^[[:space:]]*access_log /var/log/nginx/access.log main;$' /etc/nginx/nginx.conf; then
-    bashio::log.error "Unexpected nginx access_log directive in nginx.conf"
-    exit 1
+if ! grep -Eq '^[[:space:]]*access_log[[:space:]]+/tmp/nginx/access.log[[:space:]]+main;$' /etc/nginx/nginx.conf; then
+    if ! grep -Eq '^[[:space:]]*access_log[[:space:]]+/var/log/nginx/access.log[[:space:]]+main;$' /etc/nginx/nginx.conf; then
+        bashio::log.error "Unexpected nginx access_log directive in nginx.conf"
+        exit 1
+    fi
+
+    sed -i -E \
+        -e 's#^([[:space:]]*access_log)[[:space:]]+/var/log/nginx/access.log[[:space:]]+main;#\1 /tmp/nginx/access.log main;#' \
+        /etc/nginx/nginx.conf
 fi
 
-sed -i \
-    -e 's#^error_log /var/log/nginx/error.log warn;#error_log stderr warn;#' \
-    -e 's#^\([[:space:]]*access_log\) /var/log/nginx/access.log main;#\1 /tmp/nginx/access.log main;#' \
-    /etc/nginx/nginx.conf
-
-if ! grep -q '^error_log stderr warn;$' /etc/nginx/nginx.conf; then
+if ! grep -Eq '^error_log[[:space:]]+stderr[[:space:]]+warn;$' /etc/nginx/nginx.conf; then
     bashio::log.error "Failed to rewrite nginx error log path"
     exit 1
 fi
 
-if ! grep -q '^[[:space:]]*access_log /tmp/nginx/access.log main;$' /etc/nginx/nginx.conf; then
+if ! grep -Eq '^[[:space:]]*access_log[[:space:]]+/tmp/nginx/access.log[[:space:]]+main;$' /etc/nginx/nginx.conf; then
     bashio::log.error "Failed to rewrite nginx access log path"
     exit 1
 fi

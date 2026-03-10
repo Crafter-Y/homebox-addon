@@ -21,6 +21,10 @@ mkdir -p \
     /tmp/nginx/uwsgi \
     /tmp/nginx/scgi
 
+# Alpine's default "user nginx;" directive makes nginx chown temp directories
+# to uid 100 on startup, which is not permitted in all HA addon environments.
+sed -i 's/^user[[:space:]].*;/user root;/' /etc/nginx/nginx.conf
+
 # Override Alpine nginx defaults that write under /var/lib/nginx and
 # /var/log/nginx, which are not writable on all Home Assistant installs.
 cat > /etc/nginx/conf.d/runtime.conf <<'EOF'

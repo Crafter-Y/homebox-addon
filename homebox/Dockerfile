@@ -11,7 +11,7 @@ FROM ${BUILD_FROM}
 COPY --from=homebox-src /app/api /usr/bin/homebox
 
 # Install nginx for ingress reverse-proxy support
-RUN apk add --no-cache nginx
+RUN apk add --no-cache nginx=1.28.2-r1
 
 # Copy S6 overlay service scripts and any rootfs overrides
 COPY rootfs /

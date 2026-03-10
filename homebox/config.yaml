@@ -27,6 +27,6 @@ schema:
   allow_registration: bool
   max_upload_size: int(1,100)
 backup_exclude:
-  - .data/*.db-shm
-  - .data/*.db-wal
+  - "*.db-shm"
+  - "*.db-wal"
 backup: hot

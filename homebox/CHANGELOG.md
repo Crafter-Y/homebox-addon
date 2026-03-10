@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.24.2.0
+
+- Updated Homebox from 0.24.1 to 0.24.2
+
+
 ## 0.24.1.0
 
 - Updated Homebox from 0.24.0 to 0.24.1

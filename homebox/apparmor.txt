@@ -68,6 +68,9 @@ profile homebox flags=(attach_disconnected,mediate_deleted) {
     /etc/nginx/** r,
 
     # Runtime files
+    /tmp/nginx/ rw,
+    /tmp/nginx/** rwk,
+    /run/nginx/ rw,
     /var/lib/nginx/** rwk,
     /var/log/nginx/** rwk,
     /run/nginx/** rwk,

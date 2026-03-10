@@ -21,6 +21,8 @@ map \$http_upgrade \$connection_upgrade {
 server {
     listen 8099 default_server;
 
+    # Only the HA Supervisor (fixed IP on the hassio network) may connect
+    # to the ingress port.
     allow   172.30.32.2;
     deny    all;
 
@@ -39,13 +41,24 @@ server {
         proxy_set_header Upgrade           \$http_upgrade;
         proxy_set_header Connection        \$connection_upgrade;
 
+        # Strip headers that prevent the page from rendering inside the
+        # HA ingress iframe.
+        proxy_hide_header X-Frame-Options;
+        proxy_hide_header Content-Security-Policy;
+        proxy_hide_header Content-Origin-Embedder-Policy;
+        proxy_hide_header Content-Origin-Opener-Policy;
+        proxy_hide_header Content-Origin-Resource-Policy;
+
         # Rewrite absolute URLs that Homebox embeds in HTML / JS / CSS
         # so that they work under the HA ingress sub-path.
         sub_filter_once off;
-        sub_filter_types text/html text/css application/javascript;
-        sub_filter '/_nuxt/'  '${ingress_entry}/_nuxt/';
-        sub_filter '"/api/'   '"${ingress_entry}/api/';
-        sub_filter "'/api/"   "'${ingress_entry}/api/";
+        sub_filter_types text/css application/javascript;
+        sub_filter 'baseURL:"/"'  'baseURL:"${ingress_entry}/"';
+        sub_filter 'src="/'       'src="${ingress_entry}/';
+        sub_filter 'href="/'      'href="${ingress_entry}/';
+        sub_filter '/_nuxt/'      '${ingress_entry}/_nuxt/';
+        sub_filter '"/api/'       '"${ingress_entry}/api/';
+        sub_filter "'/api/"       "'${ingress_entry}/api/";
 
         proxy_redirect  / ${ingress_entry}/;
     }

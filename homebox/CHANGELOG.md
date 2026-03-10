@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.24.2.3
+
+- Fixed ingress on generic x86_64
+
 ## 0.24.2.2
 
 - Fix nginx ingress startup on HAOS by moving runtime temp/log state to writable paths

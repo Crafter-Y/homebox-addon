@@ -13,22 +13,24 @@ bashio::log.info "Ingress entry: ${ingress_entry}"
 
 # nginx needs writable runtime paths on HAOS/AppArmor.
 mkdir -p \
-    /etc/nginx/conf.d \
-    /run/nginx \
+    /etc/nginx/conf.d
+
+s6-setuidgid nginx mkdir -p \
     /tmp/nginx/client_body \
     /tmp/nginx/proxy \
     /tmp/nginx/fastcgi \
     /tmp/nginx/uwsgi \
     /tmp/nginx/scgi
 
-# Alpine's default "user nginx;" directive makes nginx chown temp directories
-# to uid 100 on startup, which is not permitted in all HA addon environments.
-sed -i 's/^user[[:space:]].*;/user root;/' /etc/nginx/nginx.conf
-
 # Override Alpine nginx defaults that write under /var/lib/nginx and
 # /var/log/nginx, which are not writable on all Home Assistant installs.
+sed -i \
+    -e 's#^error_log .*#error_log stderr warn;#' \
+    -e 's#^\([[:space:]]*access_log\) .*#\1 /tmp/nginx/access.log main;#' \
+    /etc/nginx/nginx.conf
+
 cat > /etc/nginx/conf.d/runtime.conf <<'EOF'
-pid /run/nginx/nginx.pid;
+pid /tmp/nginx/nginx.pid;
 EOF
 
 # ---------- generate nginx configuration ----------
@@ -96,6 +98,6 @@ EOF
 rm -f /etc/nginx/http.d/default.conf
 
 bashio::log.info "Starting nginx ingress proxy..."
-# Use -e so nginx does not touch Alpine's default error log path before
-# runtime.conf is loaded.
-exec nginx -e stderr -g 'daemon off;'
+# Use -e together with the rewritten main error_log path so nginx does not
+# touch Alpine's default error log file during startup.
+exec s6-setuidgid nginx nginx -e stderr -g 'daemon off;'

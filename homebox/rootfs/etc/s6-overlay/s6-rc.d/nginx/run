@@ -82,6 +82,16 @@ http {
             proxy_hide_header Content-Origin-Opener-Policy;
             proxy_hide_header Content-Origin-Resource-Policy;
 
+            # Fix cookie Domain: the HA Supervisor replaces the Host header
+            # with the addon's internal IP, so Homebox sets cookies with
+            # Domain=<internal-ip> which the browser rejects (origin
+            # mismatch).  Stripping the Domain attribute lets the browser
+            # scope cookies to the actual request origin.
+            proxy_cookie_domain ~.+ "";
+
+            # Allow file uploads up to the configured maximum size.
+            client_max_body_size 100m;
+
             # Rewrite absolute URLs that Homebox embeds in HTML / JS / CSS
             # so that they work under the HA ingress sub-path.
             sub_filter_once off;
@@ -89,7 +99,6 @@ http {
             sub_filter 'baseURL:"/"'  'baseURL:"${ingress_entry}/"';
             sub_filter 'src="/'       'src="${ingress_entry}/';
             sub_filter 'href="/'      'href="${ingress_entry}/';
-            sub_filter '/_nuxt/'      '${ingress_entry}/_nuxt/';
             sub_filter '"/api/'       '"${ingress_entry}/api/';
             sub_filter "'/api/"       "'${ingress_entry}/api/";
 

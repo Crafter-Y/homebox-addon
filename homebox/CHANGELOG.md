@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.24.2.1
+
+- Added HA ingress support for sidebar access (nginx reverse proxy)
+
 ## 0.24.2.0
 
 - Updated Homebox from 0.24.1 to 0.24.2

@@ -28,6 +28,9 @@ profile homebox flags=(attach_disconnected,mediate_deleted) {
   # Start new profile for the Homebox binary
   /usr/bin/homebox cx -> homebox_service,
 
+  # Start new profile for the nginx ingress proxy
+  /usr/sbin/nginx cx -> nginx_service,
+
   profile homebox_service flags=(attach_disconnected,mediate_deleted) {
     #include <abstractions/base>
 
@@ -46,6 +49,33 @@ profile homebox flags=(attach_disconnected,mediate_deleted) {
     # Required system files
     /bin/sh rix,
     /etc/passwd r,
+    /etc/ssl/certs/** r,
+    /dev/tty rw,
+    /proc/self/fd/ r,
+  }
+
+  profile nginx_service flags=(attach_disconnected,mediate_deleted) {
+    #include <abstractions/base>
+
+    # Network access for the ingress proxy
+    network inet tcp,
+    network inet6 tcp,
+
+    signal (receive) peer=*_homebox,
+
+    # nginx binary and libraries
+    /usr/sbin/nginx rix,
+    /etc/nginx/** r,
+
+    # Runtime files
+    /var/lib/nginx/** rwk,
+    /var/log/nginx/** rwk,
+    /run/nginx/** rwk,
+    /run/nginx.pid rwk,
+
+    # Required system files
+    /etc/passwd r,
+    /etc/group r,
     /etc/ssl/certs/** r,
     /dev/tty rw,
     /proc/self/fd/ r,

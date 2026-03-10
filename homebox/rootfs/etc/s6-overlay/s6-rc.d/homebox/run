@@ -40,9 +40,9 @@ export HBOX_OPTIONS_ALLOW_REGISTRATION
 export HBOX_OPTIONS_ALLOW_ANALYTICS="false"
 export HBOX_OPTIONS_GITHUB_RELEASE_CHECK="false"
 
-# Trust reverse-proxy headers if HA is fronted by a proxy, but keep false
-# for the default direct-access scenario.
-export HBOX_OPTIONS_TRUST_PROXY="false"
+# Trust reverse-proxy headers — always enabled because the HA Supervisor and
+# the local nginx ingress proxy sit in front of Homebox.
+export HBOX_OPTIONS_TRUST_PROXY="true"
 
 bashio::log.info "Starting Homebox..."
 exec /usr/bin/homebox

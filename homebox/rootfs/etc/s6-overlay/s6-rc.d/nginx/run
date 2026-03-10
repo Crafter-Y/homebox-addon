@@ -21,8 +21,8 @@ map \$http_upgrade \$connection_upgrade {
 server {
     listen 8099 default_server;
 
-    # Only the HA Supervisor (fixed IP on the hassio network) may connect
-    # to the ingress port.
+    # Only the HA Supervisor may connect to the ingress port.
+    # 172.30.32.2 is the Supervisor's fixed IP on the hassio bridge network.
     allow   172.30.32.2;
     deny    all;
 

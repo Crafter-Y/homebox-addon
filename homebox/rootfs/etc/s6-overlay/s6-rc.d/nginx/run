@@ -25,8 +25,8 @@ s6-setuidgid nginx mkdir -p \
 # Override Alpine nginx defaults that write under /var/lib/nginx and
 # /var/log/nginx, which are not writable on all Home Assistant installs.
 sed -i \
-    -e 's#^error_log .*#error_log stderr warn;#' \
-    -e 's#^\([[:space:]]*access_log\) .*#\1 /tmp/nginx/access.log main;#' \
+    -e 's#^error_log /var/log/nginx/error.log warn;#error_log stderr warn;#' \
+    -e 's#^\([[:space:]]*access_log\) /var/log/nginx/access.log main;#\1 /tmp/nginx/access.log main;#' \
     /etc/nginx/nginx.conf
 
 cat > /etc/nginx/conf.d/runtime.conf <<'EOF'
@@ -100,4 +100,5 @@ rm -f /etc/nginx/http.d/default.conf
 bashio::log.info "Starting nginx ingress proxy..."
 # Use -e together with the rewritten main error_log path so nginx does not
 # touch Alpine's default error log file during startup.
+s6-setuidgid nginx nginx -t -e stderr
 exec s6-setuidgid nginx nginx -e stderr -g 'daemon off;'

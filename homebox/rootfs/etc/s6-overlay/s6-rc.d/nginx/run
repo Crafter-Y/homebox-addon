@@ -12,6 +12,7 @@ bashio::log.info "Ingress entry: ${ingress_entry}"
 
 # Create writable runtime directory for nginx temp files and pid.
 mkdir -p /tmp/nginx
+chmod 700 /tmp/nginx
 
 # Generate a self-contained nginx configuration.
 # We bypass Alpine's default nginx.conf entirely so the addon does not depend

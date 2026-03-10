@@ -71,10 +71,7 @@ profile homebox flags=(attach_disconnected,mediate_deleted) {
     /tmp/nginx/ rw,
     /tmp/nginx/** rwk,
     /run/nginx/ rw,
-    /var/lib/nginx/** rwk,
-    /var/log/nginx/** rwk,
     /run/nginx/** rwk,
-    /run/nginx.pid rwk,
 
     # Required system files
     /etc/passwd r,

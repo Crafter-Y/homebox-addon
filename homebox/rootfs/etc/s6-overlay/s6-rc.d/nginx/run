@@ -25,7 +25,6 @@ mkdir -p \
 # /var/log/nginx, which are not writable on all Home Assistant installs.
 cat > /etc/nginx/conf.d/runtime.conf <<'EOF'
 pid /run/nginx/nginx.pid;
-error_log stderr warn;
 EOF
 
 # ---------- generate nginx configuration ----------
@@ -93,4 +92,6 @@ EOF
 rm -f /etc/nginx/http.d/default.conf
 
 bashio::log.info "Starting nginx ingress proxy..."
+# Use -e so nginx does not touch Alpine's default error log path before
+# runtime.conf is loaded.
 exec nginx -e stderr -g 'daemon off;'

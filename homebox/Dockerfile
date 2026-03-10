@@ -10,12 +10,16 @@ FROM ${BUILD_FROM}
 # Copy the Homebox binary from the official image
 COPY --from=homebox-src /app/api /usr/bin/homebox
 
+# Install nginx for ingress reverse-proxy support
+RUN apk add --no-cache nginx
+
 # Copy S6 overlay service scripts and any rootfs overrides
 COPY rootfs /
 
 # Ensure run scripts are executable (important when building from Windows hosts)
 RUN chmod a+x \
-    /etc/s6-overlay/s6-rc.d/homebox/run
+    /etc/s6-overlay/s6-rc.d/homebox/run \
+    /etc/s6-overlay/s6-rc.d/nginx/run
 
 # Build arguments provided by the HA build system
 ARG BUILD_ARCH

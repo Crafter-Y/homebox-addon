@@ -1,6 +1,6 @@
 ---
 name: Homebox
-version: "0.24.2.0"
+version: "0.24.2.1"
 slug: homebox
 description: Inventory management — track and manage your belongings
 url: https://github.com/Crafter-Y/homebox-addon
@@ -12,6 +12,10 @@ image: ghcr.io/crafter-y/{arch}-homebox
 startup: application
 boot: manual
 stage: stable
+ingress: true
+ingress_port: 8099
+panel_icon: mdi:package-variant-closed
+panel_title: Homebox
 ports:
   7745/tcp: 7745
 ports_description:

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.24.2.4
+
+- Fix nginx crash on HAOS: run nginx as root to avoid permission errors with user/group switching
+
 ## 0.24.2.3
 
 - Fixed ingress on generic x86_64

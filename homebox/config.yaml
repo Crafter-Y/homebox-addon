@@ -11,11 +11,13 @@ arch:
 image: ghcr.io/crafter-y/{arch}-homebox
 startup: application
 boot: manual
+stage: stable
 ports:
   7745/tcp: 7745
 ports_description:
   7745/tcp: Web UI
 webui: "http://[HOST]:[PORT:7745]"
+watchdog: "http://[HOST]:[PORT:7745]/"
 options:
   log_level: info
   allow_registration: true
@@ -27,3 +29,4 @@ schema:
 backup_exclude:
   - .data/*.db-shm
   - .data/*.db-wal
+backup: hot

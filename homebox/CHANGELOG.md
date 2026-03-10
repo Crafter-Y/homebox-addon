@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.24.2.2
+
+- Fix nginx ingress startup on HAOS by moving runtime temp/log state to writable paths
+
 ## 0.24.2.1
 
 - Added HA ingress support for sidebar access (nginx reverse proxy)

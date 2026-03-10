@@ -6,15 +6,15 @@
 # ==============================================================================
 
 declare ingress_entry
-
 # Obtain the unique ingress path assigned by the Supervisor.
 ingress_entry=$(bashio::addon.ingress_entry)
 bashio::log.info "Ingress entry: ${ingress_entry}"
 
 # nginx needs writable runtime paths on HAOS/AppArmor.
 mkdir -p \
-    /etc/nginx/conf.d \
-    /run/nginx \
+    /etc/nginx/conf.d
+
+s6-setuidgid nginx mkdir -p \
     /tmp/nginx/client_body \
     /tmp/nginx/proxy \
     /tmp/nginx/fastcgi \
@@ -23,8 +23,40 @@ mkdir -p \
 
 # Override Alpine nginx defaults that write under /var/lib/nginx and
 # /var/log/nginx, which are not writable on all Home Assistant installs.
+if ! grep -Eq '^error_log[[:space:]]+stderr[[:space:]]+warn;$' /etc/nginx/nginx.conf; then
+    if ! grep -Eq '^error_log[[:space:]]+/var/log/nginx/error.log[[:space:]]+warn;$' /etc/nginx/nginx.conf; then
+        bashio::log.error "Unexpected nginx error_log directive in nginx.conf"
+        exit 1
+    fi
+
+    sed -i -E \
+        -e 's#^error_log[[:space:]]+/var/log/nginx/error.log[[:space:]]+warn;#error_log stderr warn;#' \
+        /etc/nginx/nginx.conf
+fi
+
+if ! grep -Eq '^[[:space:]]*access_log[[:space:]]+/tmp/nginx/access.log[[:space:]]+main;$' /etc/nginx/nginx.conf; then
+    if ! grep -Eq '^[[:space:]]*access_log[[:space:]]+/var/log/nginx/access.log[[:space:]]+main;$' /etc/nginx/nginx.conf; then
+        bashio::log.error "Unexpected nginx access_log directive in nginx.conf"
+        exit 1
+    fi
+
+    sed -i -E \
+        -e 's#^([[:space:]]*access_log)[[:space:]]+/var/log/nginx/access.log[[:space:]]+main;#\1 /tmp/nginx/access.log main;#' \
+        /etc/nginx/nginx.conf
+fi
+
+if ! grep -Eq '^error_log[[:space:]]+stderr[[:space:]]+warn;$' /etc/nginx/nginx.conf; then
+    bashio::log.error "Failed to rewrite nginx error log path"
+    exit 1
+fi
+
+if ! grep -Eq '^[[:space:]]*access_log[[:space:]]+/tmp/nginx/access.log[[:space:]]+main;$' /etc/nginx/nginx.conf; then
+    bashio::log.error "Failed to rewrite nginx access log path"
+    exit 1
+fi
+
 cat > /etc/nginx/conf.d/runtime.conf <<'EOF'
-pid /run/nginx/nginx.pid;
+pid /tmp/nginx/nginx.pid;
 EOF
 
 # ---------- generate nginx configuration ----------
@@ -92,6 +124,10 @@ EOF
 rm -f /etc/nginx/http.d/default.conf
 
 bashio::log.info "Starting nginx ingress proxy..."
-# Use -e so nginx does not touch Alpine's default error log path before
-# runtime.conf is loaded.
-exec nginx -e stderr -g 'daemon off;'
+# Use -e together with the rewritten main error_log path so nginx does not
+# touch Alpine's default error log file during startup.
+if ! s6-setuidgid nginx nginx -t -e stderr; then
+    bashio::log.error "nginx configuration validation failed"
+    exit 1
+fi
+exec s6-setuidgid nginx nginx -e stderr -g 'daemon off;'

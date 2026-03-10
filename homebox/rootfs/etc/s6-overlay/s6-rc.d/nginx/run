@@ -6,6 +6,7 @@
 # ==============================================================================
 
 declare ingress_entry
+declare validation_output
 
 # Obtain the unique ingress path assigned by the Supervisor.
 ingress_entry=$(bashio::addon.ingress_entry)
@@ -28,6 +29,12 @@ sed -i \
     -e 's#^error_log /var/log/nginx/error.log warn;#error_log stderr warn;#' \
     -e 's#^\([[:space:]]*access_log\) /var/log/nginx/access.log main;#\1 /tmp/nginx/access.log main;#' \
     /etc/nginx/nginx.conf
+
+if ! grep -q '^error_log stderr warn;$' /etc/nginx/nginx.conf \
+    || ! grep -q '^[[:space:]]*access_log /tmp/nginx/access.log main;$' /etc/nginx/nginx.conf; then
+    bashio::log.error "Failed to rewrite nginx default log paths"
+    exit 1
+fi
 
 cat > /etc/nginx/conf.d/runtime.conf <<'EOF'
 pid /tmp/nginx/nginx.pid;
@@ -100,5 +107,9 @@ rm -f /etc/nginx/http.d/default.conf
 bashio::log.info "Starting nginx ingress proxy..."
 # Use -e together with the rewritten main error_log path so nginx does not
 # touch Alpine's default error log file during startup.
-s6-setuidgid nginx nginx -t -e stderr
+validation_output=$(s6-setuidgid nginx nginx -t -e stderr 2>&1) || {
+    printf '%s\n' "${validation_output}" >&2
+    bashio::log.error "nginx configuration validation failed"
+    exit 1
+}
 exec s6-setuidgid nginx nginx -e stderr -g 'daemon off;'

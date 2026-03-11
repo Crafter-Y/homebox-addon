@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.24.2.5
+
+- Fix ingress login by stripping cookie Domain attribute so browsers accept auth cookies
+- Remove sub_filter for /_nuxt/ that caused double-prefixed asset URLs
+- Allow file uploads up to 100 MB through ingress proxy
+
 ## 0.24.2.4
 
 - Fix nginx crash on HAOS: run nginx as root to avoid permission errors with user/group switching

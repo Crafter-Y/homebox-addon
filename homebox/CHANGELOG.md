@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.24.2.6
+
+- Rewrite additional root-relative ingress asset URLs so bundled icons, manifests, and placeholder images load through Home Assistant ingress
+- Rewrite template-literal websocket API URLs and extend nginx upgrade timeouts so ingress websocket connections stay connected
+
 ## 0.24.2.5
 
 - Fix ingress login by stripping cookie Domain attribute so browsers accept auth cookies

@@ -98,7 +98,7 @@ http {
             # Rewrite root-relative URLs that Homebox embeds in HTML / JS / CSS
             # so that they work under the HA ingress sub-path.
             sub_filter_once off;
-            sub_filter_types text/html text/css text/javascript application/javascript application/json application/manifest+json;
+            sub_filter_types text/css text/javascript application/javascript application/json application/manifest+json;
             sub_filter 'baseURL:"/"'  'baseURL:"${ingress_entry}/"';
             sub_filter 'src="/'       'src="${ingress_entry}/';
             sub_filter 'href="/'      'href="${ingress_entry}/';

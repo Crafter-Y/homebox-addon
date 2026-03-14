@@ -112,6 +112,8 @@ http {
             sub_filter '}/api/'       '}${ingress_entry}/api/';
             sub_filter '"/api/'       '"${ingress_entry}/api/';
             sub_filter "'/api/"       "'${ingress_entry}/api/";
+            sub_filter ':"/no-image.jpg"' ':"${ingress_entry}/no-image.jpg"';
+            sub_filter ":'/no-image.jpg'" ":'${ingress_entry}/no-image.jpg'";
 
             proxy_redirect  / ${ingress_entry}/;
         }

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.24.2.7
+
+- Fix ingress rewrite for root-relative `/no-image.jpg` fallback image URL so it loads correctly behind Home Assistant ingress
+
 ## 0.24.2.6
 
 - Rewrite additional root-relative ingress asset URLs so bundled icons, manifests, and placeholder images load through Home Assistant ingress

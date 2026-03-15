@@ -41,13 +41,12 @@ export HBOX_OPTIONS_AUTO_INCREMENT_ASSET_ID
 if bashio::config.has_value 'mailer_host'; then
   HBOX_MAILER_HOST="$(bashio::config 'mailer_host')"
   export HBOX_MAILER_HOST
+  HBOX_MAILER_PORT="$(bashio::config 'mailer_port')"
+  if [ -z "${HBOX_MAILER_PORT}" ] || [ "${HBOX_MAILER_PORT}" = "null" ]; then
+    HBOX_MAILER_PORT="587"
+  fi
+  export HBOX_MAILER_PORT
 fi
-
-HBOX_MAILER_PORT="$(bashio::config 'mailer_port')"
-if [ -z "${HBOX_MAILER_PORT}" ] || [ "${HBOX_MAILER_PORT}" = "null" ]; then
-  HBOX_MAILER_PORT="587"
-fi
-export HBOX_MAILER_PORT
 
 if bashio::config.has_value 'mailer_username'; then
   HBOX_MAILER_USERNAME="$(bashio::config 'mailer_username')"

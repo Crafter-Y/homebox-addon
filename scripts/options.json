@@ -1,0 +1,6 @@
+{
+  "log_level": "info",
+  "allow_registration": true,
+  "max_upload_size": 10,
+  "auto_increment_asset_id": true
+}

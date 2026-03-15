@@ -7,7 +7,12 @@
 
 declare ingress_entry
 # Obtain the unique ingress path assigned by the Supervisor.
-ingress_entry=$(bashio::addon.ingress_entry)
+# When running outside Home Assistant (e.g. local Docker testing), the
+# Supervisor API is unavailable — sleep forever so S6 doesn't restart in a loop.
+ingress_entry=$(bashio::addon.ingress_entry) || {
+    bashio::log.warning "Ingress not available (running outside Home Assistant?) — nginx proxy disabled"
+    exec sleep infinity
+}
 bashio::log.info "Ingress entry: ${ingress_entry}"
 
 # Create writable runtime directory for nginx temp files and pid.

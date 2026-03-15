@@ -3,3 +3,6 @@
 
 # Playwright MCP browser logs (dev tooling)
 .playwright-mcp/
+
+# Local testing runtime data (SQLite DB, tmp files, etc.)
+test-data/

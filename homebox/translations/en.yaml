@@ -15,3 +15,83 @@ configuration:
     description: >-
       Maximum size in megabytes for file uploads (e.g., item photos,
       attachments). Default is 10 MB.
+  auto_increment_asset_id:
+    name: Auto-increment asset IDs
+    description: >-
+      Automatically assign incremental asset IDs for new items.
+      Disable this if you prefer to enter asset IDs manually.
+  mailer_host:
+    name: Mailer host
+    description: SMTP server hostname used for reminder emails.
+  mailer_port:
+    name: Mailer port
+    description: SMTP server port. Defaults to 587 when left empty.
+  mailer_username:
+    name: Mailer username
+    description: SMTP username for authentication.
+  mailer_password:
+    name: Mailer password
+    description: SMTP password for authentication.
+  mailer_from:
+    name: Mailer from address
+    description: Sender email address used for Homebox emails.
+  oidc_enabled:
+    name: Enable OIDC
+    description: Enable OpenID Connect single sign-on authentication.
+  oidc_issuer_url:
+    name: OIDC issuer URL
+    description: Issuer URL of your OIDC identity provider.
+  oidc_client_id:
+    name: OIDC client ID
+    description: Client identifier registered with your OIDC provider.
+  oidc_client_secret:
+    name: OIDC client secret
+    description: Client secret registered with your OIDC provider.
+  oidc_scope:
+    name: OIDC scope
+    description: Scopes requested from the OIDC provider.
+  oidc_allowed_groups:
+    name: OIDC allowed groups
+    description: Comma-separated groups allowed to sign in.
+  oidc_auto_redirect:
+    name: OIDC auto redirect
+    description: Automatically redirect to the OIDC provider on login.
+  oidc_button_text:
+    name: OIDC button text
+    description: Label shown on the OIDC sign-in button.
+  oidc_verify_email:
+    name: OIDC verify email
+    description: Require a verified email claim from the OIDC provider.
+  oidc_group_claim:
+    name: OIDC group claim
+    description: Token claim name containing user groups.
+  oidc_email_claim:
+    name: OIDC email claim
+    description: Token claim name containing user email.
+  oidc_name_claim:
+    name: OIDC name claim
+    description: Token claim name containing user display name.
+  oidc_state_expiry:
+    name: OIDC state expiry
+    description: Validity duration for OIDC state values (e.g. 10m).
+  oidc_request_timeout:
+    name: OIDC request timeout
+    description: Timeout for OIDC provider requests (e.g. 30s).
+  allow_local_login:
+    name: Allow local login with OIDC
+    description: Keep username/password login available when OIDC is enabled.
+  hostname:
+    name: External hostname
+    description: Override hostname used for OIDC callback URLs.
+  barcode_token_barcodespider:
+    name: BarcodeSpider token
+    description: API token for BarcodeSpider product lookup by barcode.
+  thumbnail_enabled:
+    name: Enable thumbnails
+    description: Enable thumbnail generation for uploaded images.
+  thumbnail_width:
+    name: Thumbnail width
+    description: Generated thumbnail width in pixels.
+  thumbnail_height:
+    name: Thumbnail height
+    description: Generated thumbnail height in pixels.

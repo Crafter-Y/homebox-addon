@@ -1,6 +1,6 @@
 ---
 name: Homebox
-version: "0.24.2.8"
+version: "0.24.2.9"
 slug: homebox
 description: Inventory management — track and manage your belongings
 url: https://github.com/Crafter-Y/homebox-addon
@@ -32,31 +32,31 @@ schema:
   allow_registration: bool
   max_upload_size: int(1,100)
   auto_increment_asset_id: bool
-  mailer_host?: str
-  mailer_port?: int(1,65535)
-  mailer_username?: str
-  mailer_password?: password
-  mailer_from?: str
-  oidc_enabled?: bool
-  oidc_issuer_url?: str
-  oidc_client_id?: str
-  oidc_client_secret?: password
-  oidc_scope?: str
-  oidc_allowed_groups?: str
-  oidc_auto_redirect?: bool
-  oidc_button_text?: str
-  oidc_verify_email?: bool
-  oidc_group_claim?: str
-  oidc_email_claim?: str
-  oidc_name_claim?: str
-  oidc_state_expiry?: str
-  oidc_request_timeout?: str
-  allow_local_login?: bool
-  hostname?: str
-  barcode_token_barcodespider?: str
-  thumbnail_enabled?: bool
-  thumbnail_width?: int(1,5000)
-  thumbnail_height?: int(1,5000)
+  mailer_host: str?
+  mailer_port: int(1,65535)?
+  mailer_username: str?
+  mailer_password: password?
+  mailer_from: str?
+  oidc_enabled: bool?
+  oidc_issuer_url: str?
+  oidc_client_id: str?
+  oidc_client_secret: password?
+  oidc_scope: str?
+  oidc_allowed_groups: str?
+  oidc_auto_redirect: bool?
+  oidc_button_text: str?
+  oidc_verify_email: bool?
+  oidc_group_claim: str?
+  oidc_email_claim: str?
+  oidc_name_claim: str?
+  oidc_state_expiry: str?
+  oidc_request_timeout: str?
+  allow_local_login: bool?
+  hostname: str?
+  barcode_token_barcodespider: str?
+  thumbnail_enabled: bool?
+  thumbnail_width: int(1,5000)?
+  thumbnail_height: int(1,5000)?
 backup_exclude:
   - "*.db-shm"
   - "*.db-wal"

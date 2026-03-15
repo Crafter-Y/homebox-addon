@@ -35,6 +35,134 @@ HBOX_WEB_MAX_UPLOAD_SIZE="$(bashio::config 'max_upload_size')"
 export HBOX_WEB_MAX_UPLOAD_SIZE
 HBOX_OPTIONS_ALLOW_REGISTRATION="$(bashio::config 'allow_registration')"
 export HBOX_OPTIONS_ALLOW_REGISTRATION
+HBOX_OPTIONS_AUTO_INCREMENT_ASSET_ID="$(bashio::config 'auto_increment_asset_id')"
+export HBOX_OPTIONS_AUTO_INCREMENT_ASSET_ID
+
+if bashio::config.has_value 'mailer_host'; then
+  HBOX_MAILER_HOST="$(bashio::config 'mailer_host')"
+  export HBOX_MAILER_HOST
+fi
+
+HBOX_MAILER_PORT="$(bashio::config 'mailer_port')"
+if [ -z "${HBOX_MAILER_PORT}" ] || [ "${HBOX_MAILER_PORT}" = "null" ]; then
+  HBOX_MAILER_PORT="587"
+fi
+export HBOX_MAILER_PORT
+
+if bashio::config.has_value 'mailer_username'; then
+  HBOX_MAILER_USERNAME="$(bashio::config 'mailer_username')"
+  export HBOX_MAILER_USERNAME
+fi
+
+if bashio::config.has_value 'mailer_password'; then
+  HBOX_MAILER_PASSWORD="$(bashio::config 'mailer_password')"
+  export HBOX_MAILER_PASSWORD
+fi
+
+if bashio::config.has_value 'mailer_from'; then
+  HBOX_MAILER_FROM="$(bashio::config 'mailer_from')"
+  export HBOX_MAILER_FROM
+fi
+
+if bashio::config.has_value 'oidc_enabled'; then
+  HBOX_OIDC_ENABLED="$(bashio::config 'oidc_enabled')"
+  export HBOX_OIDC_ENABLED
+fi
+
+if bashio::config.has_value 'oidc_issuer_url'; then
+  HBOX_OIDC_ISSUER_URL="$(bashio::config 'oidc_issuer_url')"
+  export HBOX_OIDC_ISSUER_URL
+fi
+
+if bashio::config.has_value 'oidc_client_id'; then
+  HBOX_OIDC_CLIENT_ID="$(bashio::config 'oidc_client_id')"
+  export HBOX_OIDC_CLIENT_ID
+fi
+
+if bashio::config.has_value 'oidc_client_secret'; then
+  HBOX_OIDC_CLIENT_SECRET="$(bashio::config 'oidc_client_secret')"
+  export HBOX_OIDC_CLIENT_SECRET
+fi
+
+if bashio::config.has_value 'oidc_scope'; then
+  HBOX_OIDC_SCOPE="$(bashio::config 'oidc_scope')"
+  export HBOX_OIDC_SCOPE
+fi
+
+if bashio::config.has_value 'oidc_allowed_groups'; then
+  HBOX_OIDC_ALLOWED_GROUPS="$(bashio::config 'oidc_allowed_groups')"
+  export HBOX_OIDC_ALLOWED_GROUPS
+fi
+
+if bashio::config.has_value 'oidc_auto_redirect'; then
+  HBOX_OIDC_AUTO_REDIRECT="$(bashio::config 'oidc_auto_redirect')"
+  export HBOX_OIDC_AUTO_REDIRECT
+fi
+
+if bashio::config.has_value 'oidc_button_text'; then
+  HBOX_OIDC_BUTTON_TEXT="$(bashio::config 'oidc_button_text')"
+  export HBOX_OIDC_BUTTON_TEXT
+fi
+
+if bashio::config.has_value 'oidc_verify_email'; then
+  HBOX_OIDC_VERIFY_EMAIL="$(bashio::config 'oidc_verify_email')"
+  export HBOX_OIDC_VERIFY_EMAIL
+fi
+
+if bashio::config.has_value 'oidc_group_claim'; then
+  HBOX_OIDC_GROUP_CLAIM="$(bashio::config 'oidc_group_claim')"
+  export HBOX_OIDC_GROUP_CLAIM
+fi
+
+if bashio::config.has_value 'oidc_email_claim'; then
+  HBOX_OIDC_EMAIL_CLAIM="$(bashio::config 'oidc_email_claim')"
+  export HBOX_OIDC_EMAIL_CLAIM
+fi
+
+if bashio::config.has_value 'oidc_name_claim'; then
+  HBOX_OIDC_NAME_CLAIM="$(bashio::config 'oidc_name_claim')"
+  export HBOX_OIDC_NAME_CLAIM
+fi
+
+if bashio::config.has_value 'oidc_state_expiry'; then
+  HBOX_OIDC_STATE_EXPIRY="$(bashio::config 'oidc_state_expiry')"
+  export HBOX_OIDC_STATE_EXPIRY
+fi
+
+if bashio::config.has_value 'oidc_request_timeout'; then
+  HBOX_OIDC_REQUEST_TIMEOUT="$(bashio::config 'oidc_request_timeout')"
+  export HBOX_OIDC_REQUEST_TIMEOUT
+fi
+
+if bashio::config.has_value 'allow_local_login'; then
+  HBOX_OPTIONS_ALLOW_LOCAL_LOGIN="$(bashio::config 'allow_local_login')"
+  export HBOX_OPTIONS_ALLOW_LOCAL_LOGIN
+fi
+
+if bashio::config.has_value 'hostname'; then
+  HBOX_OPTIONS_HOSTNAME="$(bashio::config 'hostname')"
+  export HBOX_OPTIONS_HOSTNAME
+fi
+
+if bashio::config.has_value 'barcode_token_barcodespider'; then
+  HBOX_BARCODE_TOKEN_BARCODESPIDER="$(bashio::config 'barcode_token_barcodespider')"
+  export HBOX_BARCODE_TOKEN_BARCODESPIDER
+fi
+
+if bashio::config.has_value 'thumbnail_enabled'; then
+  HBOX_THUMBNAIL_ENABLED="$(bashio::config 'thumbnail_enabled')"
+  export HBOX_THUMBNAIL_ENABLED
+fi
+
+if bashio::config.has_value 'thumbnail_width'; then
+  HBOX_THUMBNAIL_WIDTH="$(bashio::config 'thumbnail_width')"
+  export HBOX_THUMBNAIL_WIDTH
+fi
+
+if bashio::config.has_value 'thumbnail_height'; then
+  HBOX_THUMBNAIL_HEIGHT="$(bashio::config 'thumbnail_height')"
+  export HBOX_THUMBNAIL_HEIGHT
+fi
 
 # Disable telemetry and self-update checks (not useful in a local HA context).
 export HBOX_OPTIONS_ALLOW_ANALYTICS="false"

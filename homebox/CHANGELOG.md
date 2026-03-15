@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.24.2.8
+
+- Expose `auto_increment_asset_id` as a configurable add-on option
+- Add optional mailer configuration fields (`mailer_host`, `mailer_port`, `mailer_username`, `mailer_password`, `mailer_from`) with mailer port fallback to `587`
+- Add optional OIDC/SSO configuration fields (`oidc_*`, `allow_local_login`, `hostname`)
+- Add optional barcode and thumbnail settings (`barcode_token_barcodespider`, `thumbnail_enabled`, `thumbnail_width`, `thumbnail_height`)
+- Document all newly exposed options in `DOCS.md`
+
 ## 0.24.2.7
 
 - Fix ingress rewrite for root-relative `/no-image.jpg` fallback image URL so it loads correctly behind Home Assistant ingress

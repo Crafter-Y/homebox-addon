@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.24.2.9
+
+- Fix add-on option schema optional markers so upgrades no longer fail validation with missing `thumbnail_height?`
+
 ## 0.24.2.8
 
 - Expose `auto_increment_asset_id` as a configurable add-on option

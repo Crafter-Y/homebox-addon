@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.24.2.10
+
+- Dependency updates
+
+
 ## 0.24.2.9
 
 - Fix add-on option schema optional markers so upgrades no longer fail validation with missing `thumbnail_height?`

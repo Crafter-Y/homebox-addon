@@ -84,7 +84,7 @@ jobs:
 
       - name: Publish Homebox app images
         if: steps.release.outputs.should_release == 'true'
-        uses: home-assistant/builder@2026.02.1
+        uses: home-assistant/builder@2026.03.2
         with:
           args: |
             --amd64 \

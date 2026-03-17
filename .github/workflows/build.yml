@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Test build Homebox app
-        uses: home-assistant/builder@2026.02.1
+        uses: home-assistant/builder@2026.03.2
         with:
           args: |
             --test \

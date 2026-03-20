@@ -93,17 +93,13 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Lowercase registry prefix
-        id: registry
-        run: echo "prefix=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
-
       - name: Get build matrix
         id: matrix
         uses: home-assistant/builder/actions/prepare-multi-arch-matrix@2026.03.2
         with:
           architectures: ${{ env.ARCHITECTURES }}
           image-name: ${{ env.IMAGE_NAME }}
-          registry-prefix: ${{ steps.registry.outputs.prefix }}
+          registry-prefix: ghcr.io/crafter-y
 
   build:
     name: Build and push ${{ matrix.arch }} image
@@ -117,12 +113,6 @@ jobs:
       matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v6
-
-      - name: Get base image for architecture
-        id: base
-        run: |
-          BUILD_FROM=$(yq '.build_from."${{ matrix.arch }}"' homebox/build.yaml)
-          echo "build_from=${BUILD_FROM}" >> "$GITHUB_OUTPUT"
 
       - name: Build and push image
         uses: home-assistant/builder/actions/build-image@2026.03.2
@@ -138,7 +128,6 @@ jobs:
           push: "true"
           version: ${{ needs.release.outputs.version }}
           build-args: |
-            BUILD_FROM=${{ steps.base.outputs.build_from }}
             BUILD_NAME=Homebox
             BUILD_DESCRIPTION=Inventory management — track and manage your belongings
             BUILD_REF=${{ github.sha }}

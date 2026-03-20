@@ -5,49 +5,23 @@ on:
   pull_request:
   workflow_dispatch:
 
-env:
-  ARCHITECTURES: '["amd64", "aarch64"]'
-  IMAGE_NAME: homebox
-
 permissions:
   contents: read
 
 jobs:
-  init:
-    name: Initialize build
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.matrix.outputs.matrix }}
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Lowercase registry prefix
-        id: registry
-        run: echo "prefix=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
-
-      - name: Get build matrix
-        id: matrix
-        uses: home-assistant/builder/actions/prepare-multi-arch-matrix@2026.03.2
-        with:
-          architectures: ${{ env.ARCHITECTURES }}
-          image-name: ${{ env.IMAGE_NAME }}
-          registry-prefix: ${{ steps.registry.outputs.prefix }}
-
   build:
     name: Build ${{ matrix.arch }} image
-    needs: init
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
+      matrix:
+        include:
+          - arch: amd64
+            os: ubuntu-24.04
+          - arch: aarch64
+            os: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@v6
-
-      - name: Get base image for architecture
-        id: base
-        run: |
-          BUILD_FROM=$(yq '.build_from."${{ matrix.arch }}"' homebox/build.yaml)
-          echo "build_from=${BUILD_FROM}" >> "$GITHUB_OUTPUT"
 
       - name: Test build
         uses: home-assistant/builder/actions/build-image@2026.03.2
@@ -56,9 +30,7 @@ jobs:
           container-registry-password: ${{ secrets.GITHUB_TOKEN }}
           context: homebox
           cosign: "false"
-          image: ${{ matrix.image }}
+          image: ghcr.io/crafter-y/${{ matrix.arch }}-homebox
           image-tags: test
           push: "false"
           version: test
-          build-args: |
-            BUILD_FROM=${{ steps.base.outputs.build_from }}

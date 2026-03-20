@@ -10,16 +10,27 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: Build ${{ matrix.arch }} image
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            os: ubuntu-24.04
+          - arch: aarch64
+            os: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@v6
 
-      - name: Test build Homebox app
-        uses: home-assistant/builder@2026.02.1
+      - name: Test build
+        uses: home-assistant/builder/actions/build-image@2026.03.2
         with:
-          args: |
-            --test \
-            --amd64 \
-            --aarch64 \
-            --target /data/homebox \
-            --addon
+          arch: ${{ matrix.arch }}
+          container-registry-password: ${{ secrets.GITHUB_TOKEN }}
+          context: homebox
+          cosign: "false"
+          image: ghcr.io/crafter-y/${{ matrix.arch }}-homebox
+          image-tags: test
+          push: "false"
+          version: test

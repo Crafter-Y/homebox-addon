@@ -1,11 +1,8 @@
-# https://developers.home-assistant.io/docs/add-ons/configuration#add-on-dockerfile
-ARG BUILD_FROM
-
 # Stage 1: Extract the Homebox binary from the official multi-arch image
 FROM ghcr.io/sysadminsmedia/homebox:0.24.2 AS homebox-src
 
 # Stage 2: Build the HA addon on top of the official HA base image
-FROM ${BUILD_FROM}
+FROM ghcr.io/hassio-addons/base:20.0.1
 
 # Copy the Homebox binary from the official image
 COPY --from=homebox-src /app/api /usr/bin/homebox

@@ -9,13 +9,22 @@ on:
       - homebox/config.yaml
       - homebox/CHANGELOG.md
 
+env:
+  ARCHITECTURES: '["amd64", "aarch64"]'
+  IMAGE_NAME: homebox
+
 permissions:
   contents: write
   packages: write
 
 jobs:
   release:
+    name: Create release
     runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.release.outputs.should_release }}
+      version: ${{ steps.release.outputs.version }}
+      tag: ${{ steps.release.outputs.tag }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -64,14 +73,6 @@ jobs:
             echo "tag=${TAG}"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Log in to GitHub Container Registry
-        if: steps.release.outputs.should_release == 'true'
-        uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ github.token }}
-
       - name: Create tag and GitHub release
         if: steps.release.outputs.should_release == 'true'
         env:
@@ -82,12 +83,52 @@ jobs:
             --title "${{ steps.release.outputs.tag }}" \
             --notes-file /tmp/release-notes.md
 
-      - name: Publish Homebox app images
-        if: steps.release.outputs.should_release == 'true'
-        uses: home-assistant/builder@2026.02.1
+  init:
+    name: Initialize build
+    needs: release
+    if: needs.release.outputs.should_release == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Get build matrix
+        id: matrix
+        uses: home-assistant/builder/actions/prepare-multi-arch-matrix@2026.03.2
         with:
-          args: |
-            --amd64 \
-            --aarch64 \
-            --target /data/homebox \
-            --addon
+          architectures: ${{ env.ARCHITECTURES }}
+          image-name: ${{ env.IMAGE_NAME }}
+          registry-prefix: ghcr.io/crafter-y
+
+  build:
+    name: Build and push ${{ matrix.arch }} image
+    needs: [release, init]
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build and push image
+        uses: home-assistant/builder/actions/build-image@2026.03.2
+        with:
+          arch: ${{ matrix.arch }}
+          container-registry-password: ${{ secrets.GITHUB_TOKEN }}
+          context: homebox
+          cosign: "false"
+          image: ${{ matrix.image }}
+          image-tags: |
+            ${{ needs.release.outputs.version }}
+            latest
+          push: "true"
+          version: ${{ needs.release.outputs.version }}
+          build-args: |
+            BUILD_NAME=Homebox
+            BUILD_DESCRIPTION=Inventory management — track and manage your belongings
+            BUILD_REF=${{ github.sha }}
+            BUILD_REPOSITORY=${{ github.repository }}

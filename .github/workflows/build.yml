@@ -5,21 +5,55 @@ on:
   pull_request:
   workflow_dispatch:
 
+env:
+  ARCHITECTURES: '["amd64", "aarch64"]'
+  IMAGE_NAME: homebox
+
 permissions:
   contents: read
 
 jobs:
-  build:
+  init:
+    name: Initialize build
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v6
 
-      - name: Test build Homebox app
-        uses: home-assistant/builder@2026.02.1
+      - name: Get build matrix
+        id: matrix
+        uses: home-assistant/builder/actions/prepare-multi-arch-matrix@2026.03.2
         with:
-          args: |
-            --test \
-            --amd64 \
-            --aarch64 \
-            --target /data/homebox \
-            --addon
+          architectures: ${{ env.ARCHITECTURES }}
+          image-name: ${{ env.IMAGE_NAME }}
+
+  build:
+    name: Build ${{ matrix.arch }} image
+    needs: init
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Get base image for architecture
+        id: base
+        run: |
+          BUILD_FROM=$(yq '.build_from."${{ matrix.arch }}"' homebox/build.yaml)
+          echo "build_from=${BUILD_FROM}" >> "$GITHUB_OUTPUT"
+
+      - name: Test build
+        uses: home-assistant/builder/actions/build-image@2026.03.2
+        with:
+          arch: ${{ matrix.arch }}
+          container-registry-password: ${{ secrets.GITHUB_TOKEN }}
+          context: homebox
+          cosign: "false"
+          image: ${{ matrix.image }}
+          image-tags: test
+          push: "false"
+          version: test
+          build-args: |
+            BUILD_FROM=${{ steps.base.outputs.build_from }}

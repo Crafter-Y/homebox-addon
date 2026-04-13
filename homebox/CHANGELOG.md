@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.25.0.0
+
+- Updated Homebox from 0.24.2 to 0.25.0
+- Updated HA base image from 20.0.1 to 20.0.4
+
+
 ## 0.24.2.9
 
 - Fix add-on option schema optional markers so upgrades no longer fail validation with missing `thumbnail_height?`

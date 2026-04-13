@@ -1,14 +1,14 @@
 # Stage 1: Extract the Homebox binary from the official multi-arch image
-FROM ghcr.io/sysadminsmedia/homebox:0.24.2 AS homebox-src
+FROM ghcr.io/sysadminsmedia/homebox:0.25.0 AS homebox-src
 
 # Stage 2: Build the HA addon on top of the official HA base image
-FROM ghcr.io/hassio-addons/base:20.0.1
+FROM ghcr.io/hassio-addons/base:20.0.4
 
 # Copy the Homebox binary from the official image
 COPY --from=homebox-src /app/api /usr/bin/homebox
 
 # Install nginx for ingress reverse-proxy support
-RUN apk add --no-cache nginx=1.28.2-r1
+RUN apk add --no-cache nginx=1.28.3-r0
 
 # Copy S6 overlay service scripts and any rootfs overrides
 COPY rootfs /

@@ -38,6 +38,25 @@ export HBOX_OPTIONS_ALLOW_REGISTRATION
 HBOX_OPTIONS_AUTO_INCREMENT_ASSET_ID="$(bashio::config 'auto_increment_asset_id')"
 export HBOX_OPTIONS_AUTO_INCREMENT_ASSET_ID
 
+HBOX_AUTH_API_KEY_PEPPER_FILE="/data/auth_api_key_pepper"
+if bashio::config.has_value 'auth_api_key_pepper'; then
+  HBOX_AUTH_API_KEY_PEPPER="$(bashio::config 'auth_api_key_pepper')"
+else
+  if [ ! -s "${HBOX_AUTH_API_KEY_PEPPER_FILE}" ]; then
+    umask 077
+    head -c 48 /dev/urandom | base64 > "${HBOX_AUTH_API_KEY_PEPPER_FILE}"
+    chmod 600 "${HBOX_AUTH_API_KEY_PEPPER_FILE}"
+    bashio::log.info "Generated Homebox API key pepper at ${HBOX_AUTH_API_KEY_PEPPER_FILE}"
+  fi
+  HBOX_AUTH_API_KEY_PEPPER="$(tr -d '\r\n' < "${HBOX_AUTH_API_KEY_PEPPER_FILE}")"
+fi
+
+if [ "${#HBOX_AUTH_API_KEY_PEPPER}" -lt 32 ]; then
+  bashio::log.fatal "Homebox API key pepper must be at least 32 characters"
+  exit 1
+fi
+export HBOX_AUTH_API_KEY_PEPPER
+
 if bashio::config.has_value 'mailer_host'; then
   HBOX_MAILER_HOST="$(bashio::config 'mailer_host')"
   export HBOX_MAILER_HOST

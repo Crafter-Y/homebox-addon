@@ -1,6 +1,6 @@
 ---
 name: Homebox
-version: "0.25.0.1"
+version: "0.26.2.0"
 slug: homebox
 description: Inventory management — track and manage your belongings
 url: https://github.com/Crafter-Y/homebox-addon
@@ -32,6 +32,7 @@ schema:
   allow_registration: bool
   max_upload_size: int(1,100)
   auto_increment_asset_id: bool
+  auth_api_key_pepper: password?
   mailer_host: str?
   mailer_port: int(1,65535)?
   mailer_username: str?

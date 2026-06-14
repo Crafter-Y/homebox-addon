@@ -8,7 +8,7 @@ FROM ghcr.io/hassio-addons/base:21.0.0
 COPY --from=homebox-src /app/api /usr/bin/homebox
 
 # Install nginx for ingress reverse-proxy support
-RUN apk add --no-cache nginx=1.28.3-r3
+RUN apk add --no-cache nginx=1.30.2-r1
 
 # Copy S6 overlay service scripts and any rootfs overrides
 COPY rootfs /

@@ -20,6 +20,11 @@ configuration:
     description: >-
       Automatically assign incremental asset IDs for new items.
       Disable this if you prefer to enter asset IDs manually.
+  auth_api_key_pepper:
+    name: API key pepper
+    description: >-
+      Secret used by Homebox to hash API keys. Leave empty to generate
+      and persist a random value automatically.
   mailer_host:
     name: Mailer host
     description: SMTP server hostname used for reminder emails.

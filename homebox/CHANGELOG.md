@@ -4,6 +4,8 @@
 
 - Updated Homebox from 0.25.0 to 0.26.2
 - Updated HA base image from 20.1.1 to 21.0.0
+- Updated nginx package pin for the new HA base image
+- Generate and persist the required Homebox API key pepper when it is not configured
 
 
 ## 0.25.0.1

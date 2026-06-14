@@ -40,6 +40,14 @@ When `true`, Homebox auto-generates incremental asset IDs for new items. Disable
 
 Default: `true`
 
+### Option: `auth_api_key_pepper`
+
+Optional secret used by Homebox to hash API keys. It must be at least 32 characters if set.
+
+When unset, the add-on generates a random pepper at first startup and stores it in `/data/auth_api_key_pepper` so it persists across restarts and Home Assistant backups.
+
+Default: generated automatically
+
 ### Option: `barcode_token_barcodespider`
 
 Optional API token for BarcodeSpider.com product lookup via barcode scanning.

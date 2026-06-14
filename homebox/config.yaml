@@ -32,6 +32,7 @@ schema:
   allow_registration: bool
   max_upload_size: int(1,100)
   auto_increment_asset_id: bool
+  auth_api_key_pepper: password?
   mailer_host: str?
   mailer_port: int(1,65535)?
   mailer_username: str?

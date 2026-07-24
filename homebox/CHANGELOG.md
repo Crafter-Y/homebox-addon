@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.26.2.1
+
+- Dependency updates
+
+
 ## 0.26.2.0
 
 - Updated Homebox from 0.25.0 to 0.26.2

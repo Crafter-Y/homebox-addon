@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.26.2.3
+
+- Updated HA base image from 21.0.0 to 21.0.1
+- Updated stable nginx package from 1.30.2-r1 to 1.30.4-r1 for Alpine 3.24
+
+
 ## 0.26.2.2
 
 - Allow non-admin Home Assistant users to access Homebox from the sidebar

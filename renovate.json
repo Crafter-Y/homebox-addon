@@ -36,7 +36,7 @@
         "RUN apk add --no-cache nginx=(?<currentValue>[^\\s]+)"
       ],
       "datasourceTemplate": "repology",
-      "depNameTemplate": "alpine_3_23/nginx",
+      "depNameTemplate": "alpine_3_24/nginx",
       "versioningTemplate": "loose"
     },
     {

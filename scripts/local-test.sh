@@ -30,7 +30,7 @@ fi
 # --- Build -------------------------------------------------------------------
 echo "==> Building addon image..."
 docker build \
-    --build-arg BUILD_FROM=ghcr.io/hassio-addons/base:21.0.0 \
+    --build-arg BUILD_FROM=ghcr.io/hassio-addons/base:21.0.1 \
     -t "$IMAGE_NAME" \
     "${PROJECT_DIR}/homebox"
 

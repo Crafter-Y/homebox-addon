@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.26.2.2
+
+- Allow non-admin Home Assistant users to access Homebox from the sidebar
+
+
 ## 0.26.2.1
 
 - Dependency updates

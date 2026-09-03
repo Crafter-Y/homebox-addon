@@ -2,7 +2,7 @@
 FROM ghcr.io/sysadminsmedia/homebox:0.26.2 AS homebox-src
 
 # Stage 2: Build the HA addon on top of the official HA base image
-FROM ghcr.io/hassio-addons/base:21.0.1
+FROM ghcr.io/hassio-addons/base:21.0.4
 
 # Copy the Homebox binary from the official image
 COPY --from=homebox-src /app/api /usr/bin/homebox

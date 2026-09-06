@@ -50,3 +50,5 @@ Creative Commons Attribution 4.0 International License.
 
 You should have received a copy of the license along with this
 work. If not, see <https://creativecommons.org/licenses/by/4.0/>.
+
+Published container images also include the unmodified Homebox binary from [sysadminsmedia/homebox](https://github.com/sysadminsmedia/homebox), licensed under GNU AGPLv3.

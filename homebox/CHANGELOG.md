@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.26.2.6
+
+- Updated HA base image from 21.0.4 to 21.0.5
+
+
 ## 0.26.2.5
 
 - Corrected container license metadata to include Homebox's AGPLv3 license alongside the add-on's CC BY 4.0 license

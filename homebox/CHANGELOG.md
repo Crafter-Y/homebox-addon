@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.26.2.8
+
+- Updated HA base image from 21.0.4 to 21.0.7
+
+
 ## 0.26.2.7
 
 - Allow nginx to read the ingress script under AppArmor so the attachment download fix works in Home Assistant

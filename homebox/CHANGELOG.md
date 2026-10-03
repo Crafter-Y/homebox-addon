@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.26.2.6
+
+- Use attachment downloads for the open button through HA ingress to avoid unauthorized requests in external browsers
+
 ## 0.26.2.5
 
 - Corrected container license metadata to include Homebox's AGPLv3 license alongside the add-on's CC BY 4.0 license

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.26.2.7
+
+- Allow nginx to read the ingress script under AppArmor so the attachment download fix works in Home Assistant
+
 ## 0.26.2.6
 
 - Use attachment downloads for the open button through HA ingress to avoid unauthorized requests in external browsers

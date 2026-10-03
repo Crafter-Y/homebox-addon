@@ -66,6 +66,7 @@ profile homebox flags=(attach_disconnected,mediate_deleted) {
     # nginx binary and libraries
     /usr/sbin/nginx rix,
     /etc/nginx/** r,
+    /usr/share/homebox/ingress.js r,
 
     # Runtime files
     /tmp/nginx/ rw,

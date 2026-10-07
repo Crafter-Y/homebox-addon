@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Fetch master for comparison
         run: git fetch origin master
@@ -20,6 +22,17 @@ jobs:
       - name: Bump version and update changelog
         run: |
           set -euo pipefail
+
+          # Leave manually edited Renovate branches under human control.
+          while IFS= read -r author; do
+            case "$author" in
+              '29139614+renovate[bot]@users.noreply.github.com'|'41898282+github-actions[bot]@users.noreply.github.com') ;;
+              *)
+                echo "Skipping version and changelog update: branch contains a commit by ${author}."
+                exit 0
+                ;;
+            esac
+          done <<< "$(git log --format='%ae' origin/master..HEAD)"
 
           # Versions on the Renovate branch (deps already updated by Renovate)
           HB_VERSION=$(grep -oP 'sysadminsmedia/homebox:\K[^\s]+' homebox/Dockerfile)

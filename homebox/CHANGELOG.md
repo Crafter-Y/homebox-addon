@@ -4,6 +4,7 @@
 
 - Updated Homebox from 0.26.2 to 0.27.0
 - Updated HA base image from 21.0.4 to 21.0.8
+- Updated nginx ingress header filtering for Homebox 0.27.0's corrected Cross-Origin policy headers
 
 
 ## 0.26.2.7

@@ -91,9 +91,9 @@ http {
             # HA ingress iframe.
             proxy_hide_header X-Frame-Options;
             proxy_hide_header Content-Security-Policy;
-            proxy_hide_header Content-Origin-Embedder-Policy;
-            proxy_hide_header Content-Origin-Opener-Policy;
-            proxy_hide_header Content-Origin-Resource-Policy;
+            proxy_hide_header Cross-Origin-Embedder-Policy;
+            proxy_hide_header Cross-Origin-Opener-Policy;
+            proxy_hide_header Cross-Origin-Resource-Policy;
 
             # Fix cookie Domain: the HA Supervisor replaces the Host header
             # with the addon's internal IP, so Homebox sets cookies with

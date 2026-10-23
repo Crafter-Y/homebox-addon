@@ -4,7 +4,7 @@
 
 - Updated Homebox from 0.27.0 to 0.27.1
 - Updated HA base image from 21.0.8 to 21.0.9
-
+- This incorporates the upstream Node2Shell patch. Please update ASAP!
 
 ## 0.27.0.0
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.27.1.1
+
+- Updated HA base image from 21.0.9 to 21.0.10
+
+
 ## 0.27.1.0
 
 - Updated Homebox from 0.27.0 to 0.27.1

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.27.1.2
+
+- Important NGINX Security Update. Patches NGINX2Shell. Please update ASAP!
+
+
 ## 0.27.1.1
 
 - Updated HA base image from 21.0.9 to 21.0.11

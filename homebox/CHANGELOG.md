@@ -2,7 +2,7 @@
 
 ## 0.27.1.2
 
-- Dependency updates
+- Important NGINX Security Update. Patches NGINX2Shell. Please update ASAP!
 
 
 ## 0.27.1.1

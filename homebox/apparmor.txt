@@ -38,6 +38,10 @@ profile homebox flags=(attach_disconnected,mediate_deleted) {
     network inet tcp,
     network inet6 tcp,
 
+    # SMTP, UDP for DNS lookups
+    network inet udp,
+    network inet6 udp,
+
     signal (receive) peer=*_homebox,
 
     # Data directory (SQLite database, uploaded files, temp files)
@@ -49,6 +53,7 @@ profile homebox flags=(attach_disconnected,mediate_deleted) {
     # Required system files
     /bin/sh rix,
     /etc/passwd r,
+    /etc/resolv.conf r,
     /etc/ssl/certs/** r,
     /dev/tty rw,
     /proc/self/fd/ r,

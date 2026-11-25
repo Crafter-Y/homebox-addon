@@ -73,9 +73,9 @@ Thumbnail height in pixels.
 Default: Homebox default (`500`)
 
 <details>
-<summary>Email reminder configuration (optional)</summary>
+<summary>Email configuration (optional)</summary>
 
-These options enable Homebox reminder emails (for warranty and maintenance reminders):
+These options let Homebox send password reset emails and warranty and maintenance reminders:
 
 - `mailer_host` — SMTP server hostname
 - `mailer_port` — SMTP server port (defaults to `587` when unset/empty)

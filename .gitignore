@@ -6,3 +6,6 @@
 
 # Local testing runtime data (SQLite DB, tmp files, etc.)
 test-data/
+
+# macOS Finder metadata
+.DS_Store

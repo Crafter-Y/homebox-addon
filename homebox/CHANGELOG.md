@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.27.1.4
+
+- Fix DNS resolution for SMTP so Homebox can send password reset emails.
+
 ## 0.27.1.3
 
 - Updated HA base image from 21.0.11 to 21.0.12

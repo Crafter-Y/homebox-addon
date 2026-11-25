@@ -38,7 +38,7 @@ profile homebox flags=(attach_disconnected,mediate_deleted) {
     network inet tcp,
     network inet6 tcp,
 
-    # SMTP, UDP for DNS lookups
+    # DNS lookups
     network inet udp,
     network inet6 udp,
 

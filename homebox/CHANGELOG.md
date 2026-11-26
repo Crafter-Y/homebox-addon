@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.27.1.5
+
+- Dependency updates
+
+
 ## 0.27.1.4
 
 - Fix DNS resolution for SMTP so Homebox can send password reset emails.

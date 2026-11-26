@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.27.1.6
+
+- Updated HA base image from 21.0.12 to 21.1.0
+
+
 ## 0.27.1.5
 
 - Dependency updates
